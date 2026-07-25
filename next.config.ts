@@ -12,6 +12,10 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  webpack: (config) => {
+    config.externals = [...(config.externals || []), 'bufferutil', 'utf-8-validate'];
+    return config;
+  },
 };
 
 export default withNextIntl(nextConfig);
