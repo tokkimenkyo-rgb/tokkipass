@@ -12,9 +12,12 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  webpack: (config) => {
-    config.externals = [...(config.externals || []), 'bufferutil', 'utf-8-validate'];
-    return config;
+  turbopack: {
+    resolveAlias: {
+      ws: './lib/empty-module.ts',
+      bufferutil: './lib/empty-module.ts',
+      'utf-8-validate': './lib/empty-module.ts',
+    },
   },
 };
 
