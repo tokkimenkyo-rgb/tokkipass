@@ -31,7 +31,7 @@ function detectLocale(request: NextRequest): Locale {
   return DEFAULT_LOCALE;
 }
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const response = NextResponse.next();
 
   if (!request.cookies.get('tokkipass-locale')) {
