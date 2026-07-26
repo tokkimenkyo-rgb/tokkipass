@@ -12,13 +12,6 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  turbopack: {
-    resolveAlias: {
-      ws: './lib/empty-module.ts',
-      bufferutil: './lib/empty-module.ts',
-      'utf-8-validate': './lib/empty-module.ts',
-    },
-  },
 };
 
 export default withNextIntl(nextConfig);
