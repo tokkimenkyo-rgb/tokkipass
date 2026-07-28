@@ -28,6 +28,7 @@ import type {
 import { getQuestionText, getExplanation } from '@/types/database.types';
 import type { Locale } from '@/i18n/config';
 import { SAMPLE_QUESTIONS } from '@/lib/sample-questions';
+import { createClient } from '@/lib/supabase/client';
 
 const DISPLAY_LOCALE: Locale = 'id';
 const KARIAMEN_DURATION_SECONDS = 30 * 60;
@@ -389,7 +390,31 @@ function ResultScreen({ score, total, onReset }: ResultScreenProps) {
 }
 
 export default function QuizPage() {
-  const [userTier] = useState<AccountTierType>('free');
+  const [userTier, setUserTier] = useState<AccountTierType>('free');
+
+  useEffect(() => {
+    async function fetchUserTier() {
+      const supabase = createClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) return;
+
+      const { data } = await supabase
+        .from('profiles')
+        .select('tier')
+        .eq('id', user.id)
+        .single();
+
+      const profile = data as { tier: AccountTierType } | null;
+      if (profile?.tier) {
+        setUserTier(profile.tier);
+      }
+    }
+
+    fetchUserTier();
+  }, []);
 
   const initialState: QuizState = {
     questions: SAMPLE_QUESTIONS,
