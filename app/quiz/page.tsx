@@ -29,6 +29,7 @@ import { getQuestionText, getExplanation } from '@/types/database.types';
 import type { Locale } from '@/i18n/config';
 import { SAMPLE_QUESTIONS } from '@/lib/sample-questions';
 import { createClient } from '@/lib/supabase/client';
+import { submitAnswer } from '@/actions/submit-answer';
 
 const DISPLAY_LOCALE: Locale = 'id';
 const KARIAMEN_DURATION_SECONDS = 30 * 60;
@@ -457,9 +458,13 @@ export default function QuizPage() {
     userAnswer !== null ? userAnswer === currentQuestion?.correct_answer : null;
 
   function handleAnswer(answer: boolean) {
-    if (state.isAnswered || isExpired || state.isFinished) return;
-    dispatch({ type: 'ANSWER', questionId: currentQuestion.id, answer });
-  }
+  if (state.isAnswered || isExpired || state.isFinished) return;
+  const isCorrect = answer === currentQuestion.correct_answer;
+  submitAnswer(currentQuestion.id, isCorrect).catch((err) =>
+    console.error('Gagal simpan progress:', err)
+  );
+  dispatch({ type: 'ANSWER', questionId: currentQuestion.id, answer });
+}
 
   function handleNext() {
     if (!state.isAnswered) return;
