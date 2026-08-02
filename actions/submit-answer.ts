@@ -24,7 +24,7 @@ export async function submitAnswer(questionId: string, isCorrect: boolean) {
     user_id: user.id,
     question_id: questionId,
     is_correct: isCorrect,
-  });
+  } as never);
 
   if (insertError) {
     return { error: insertError.message };
@@ -33,7 +33,7 @@ export async function submitAnswer(questionId: string, isCorrect: boolean) {
   // 2. Ambil xp/coins/streak profile saat ini
   const { data: profileData, error: profileError } = await supabase
     .from('profiles')
-    .select('xp, coins, streak_days, last_activity_date')
+    .select('*')
     .eq('id', user.id)
     .single();
 
@@ -92,7 +92,7 @@ export async function submitAnswer(questionId: string, isCorrect: boolean) {
       coins: newCoins,
       streak_days: newStreak,
       last_activity_date: today,
-    })
+    } as never)
     .eq('id', user.id);
 
   if (updateError) {
